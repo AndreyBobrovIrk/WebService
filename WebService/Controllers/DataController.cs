@@ -11,15 +11,11 @@ namespace WebService.Controllers
 {
     public class DataController : ApiController
     {
-        DataItem[] m_items = new DataItem[] {
-            new DataItem { Code = 1, Value = "111" },
-            new DataItem { Code = 2, Value = "222" },
-            new DataItem { Code = 3, Value = "333" }
-        };
+        DataContext m_data = new DataContext();
 
         public IEnumerable<DataItem> Get()
         {
-            return m_items;
+            return m_data.Items;
         }
 
         [HttpPost]
