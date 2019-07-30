@@ -21,5 +21,11 @@ namespace WebService.Controllers
         {
             return m_items;
         }
+
+        [HttpPost]
+        public void Post(Newtonsoft.Json.Linq.JArray a_dataItems)
+        {
+
+        }
     }
 }
