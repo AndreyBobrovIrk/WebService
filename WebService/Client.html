@@ -3,28 +3,22 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
     <script>
         var rootURL = "http://localhost:54838/api/Data";
 
         $(document).ready(function () {
-
             $("input#btn_get").click(
                 function () {
-                    $.ajax({
-                        type: 'GET',
-                        url: rootURL,
-                        dataType: "json",
-                        success: function (response) {
-                            alert("GET Success !!!");
-                        },
-                        error: function (response) {
-                            alert("GET Error !!!");
+                    $.getJSON(
+                        rootURL,
+                        function (result) {
+                            $("textarea#json").val(JSON.stringify(result));
                         }
-                    });
+                    );
                 }
             );
-
+                
             $("input#btn_post").click(
                 function () {
                     $.ajax({
@@ -32,26 +26,26 @@
                         contentType: "application/json",
                         url: rootURL,
                         dataType: 'json',
-                        data: JSON.stringify('[{"Code": 1, "Value":"111"}, {"Code": 5, "Value": "555"}, {"Code":3, "Value":"333"}]'),
-                        success: function (response) {
-                            alert("POST Success !!!");
-                        },
-                        error: function (response) {
-                            alert("POST Error !!!");
-                        }
+                        data: JSON.stringify(JSON.parse($("textarea#json").val()))
                     });
                 }
             );
 
-        })
+            $("input#btn_clear").click(
+                function () {
+                    $("textarea#json").val("[]");
+                }
+            );
+        }
+     )
 
     </script>
 </head>
-<body>
 
-    <textarea id="json" rows="35" cols="150">
-    </textarea>
+<body>
+    <textarea id="json" rows="35" cols="150"></textarea>
     <br />
+    <input type="button" id="btn_clear" value="Clear" />
     <input type="button" id="btn_get" value="Get" />
     <input type="button" id="btn_post" value="Post" />
 </body>

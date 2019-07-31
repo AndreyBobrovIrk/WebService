@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Results;
 using Newtonsoft.Json.Linq;
+using System.Web.Http.Description;
+using System.Security.Principal;
 
 using WebService.Models;
 
@@ -16,26 +18,24 @@ namespace WebService.Controllers
         DataContext m_data = new DataContext();
 
         [HttpGet]
-        public JsonResult<IEnumerable<DataItem>> Get()
+        public JArray Get()
         {
-            return Json<IEnumerable<DataItem>>(m_data.Items.AsEnumerable());
+            return JArray.FromObject(m_data.Items);
         }
 
         [HttpGet]
-        public JsonResult<IEnumerable<DataItem>> Get(String a_filter)
+        public JArray Get(String a_filter)
         {
             if(String.IsNullOrEmpty(a_filter))
             {
                 return Get();
             }
 
-            return Json<IEnumerable<DataItem>>(
-                m_data.Items.SqlQuery(String.Format("Select * from DataItems where {0}", a_filter))
-            );
+            return JArray.FromObject(m_data.Items.SqlQuery(String.Format("Select * from DataItems where {0}", a_filter)));
         }
-        
+
         [HttpPost]
-        public IHttpActionResult Post(JArray a_dataItems)
+        public IHttpActionResult Post([FromBody] JArray a_dataItems)
         {
             using (var transaction = m_data.Database.BeginTransaction())
             {
