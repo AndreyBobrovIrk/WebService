@@ -8,6 +8,15 @@
         var rootURL = "http://localhost:54838/api/Data";
 
         $(document).ready(function () {
+            $.ajax({
+                url: "TestData.json",
+                dataType: "text",
+                async: true,
+                success: function (msg) {
+                    $("textarea#json").val(msg);
+                }
+            });
+
             $("input#btn_get").click(
                 function () {
                     $.getJSON(
@@ -43,7 +52,7 @@
 </head>
 
 <body>
-    <textarea id="json" rows="35" cols="150"></textarea>
+    <textarea id="json" rows="35" cols="150">[]</textarea>
     <br />
     <input type="button" id="btn_clear" value="Clear" />
     <input type="button" id="btn_get" value="Get" />
