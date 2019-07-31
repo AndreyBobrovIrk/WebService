@@ -19,12 +19,22 @@
 
             $("input#btn_get").click(
                 function () {
-                    $.getJSON(
-                        rootURL,
-                        function (result) {
-                            $("textarea#json").val(JSON.stringify(result));
-                        }
-                    );
+                    $("textarea#json").val("");
+                    if ($("input#tbx_filter").val() == "") {
+                        $.getJSON(
+                            rootURL,
+                            function (result) {
+                                $("textarea#json").val(JSON.stringify(result));
+                            }
+                        );
+                    } else {
+                        $.getJSON(
+                            rootURL + '?filter=' + $("input#tbx_filter").val(),
+                            function (result) {
+                                $("textarea#json").val(JSON.stringify(result));
+                            }
+                        );
+                    }
                 }
             );
                 
@@ -54,8 +64,10 @@
 <body>
     <textarea id="json" rows="35" cols="150">[]</textarea>
     <br />
-    <input type="button" id="btn_clear" value="Clear" />
+    <label> Filter items: </label>
+    <input id="tbx_filter" />
     <input type="button" id="btn_get" value="Get" />
     <input type="button" id="btn_post" value="Post" />
+    <input type="button" id="btn_clear" value="Clear" />
 </body>
 </html>

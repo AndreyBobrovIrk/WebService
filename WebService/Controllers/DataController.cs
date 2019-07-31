@@ -24,14 +24,14 @@ namespace WebService.Controllers
         }
 
         [HttpGet]
-        public JArray Get(String a_filter)
+        public JArray Get(String filter)
         {
-            if(String.IsNullOrEmpty(a_filter))
+            if(String.IsNullOrEmpty(filter))
             {
                 return Get();
             }
 
-            return JArray.FromObject(m_data.Items.SqlQuery(String.Format("Select * from DataItems where {0}", a_filter)));
+            return JArray.FromObject(m_data.Items.SqlQuery(String.Format("Select * from DataItems where {0}", filter)));
         }
 
         [HttpPost]
