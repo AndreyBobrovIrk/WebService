@@ -31,7 +31,14 @@ namespace WebService.Controllers
                 return Get();
             }
 
-            return JArray.FromObject(m_data.Items.SqlQuery(String.Format("Select * from DataItems where {0}", filter)));
+            try
+            {
+                return JArray.FromObject(m_data.Items.SqlQuery(String.Format("Select * from DataItems where {0}", filter)));
+            } catch
+            {
+            }
+
+            return new JArray();
         }
 
         [HttpPost]
@@ -39,16 +46,28 @@ namespace WebService.Controllers
         {
             using (var transaction = m_data.Database.BeginTransaction())
             {
-                m_data.Database.ExecuteSqlCommand("TRUNCATE TABLE DataItems");
-
-                foreach (var o in a_dataItems.OrderBy(o => o.Value<int>("Code")))
+                if (a_dataItems == null)
                 {
-                    m_data.Items.Add(new DataItem() { Code = o.Value<int>("Code"), Value = o.Value<string>("Value") });
+                    return this.BadRequest("Wrong json format!");
                 }
 
-                m_data.SaveChanges();
+                try
+                {
+                    m_data.Database.ExecuteSqlCommand("TRUNCATE TABLE DataItems");
 
-                transaction.Commit();
+                    foreach (var o in a_dataItems.OrderBy(o => o.Value<int>("Code")))
+                    {
+                        m_data.Items.Add(new DataItem() { Code = o.Value<int>("Code"), Value = o.Value<string>("Value") });
+                    }
+
+                    m_data.SaveChanges();
+
+                    transaction.Commit();
+                }
+                catch (Exception err)
+                {
+                    return this.BadRequest(err.Message);
+                }
             }
 
             return Ok();
