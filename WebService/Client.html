@@ -7,9 +7,15 @@
     <script>
         var rootURL = "http://localhost:54838/api/Data";
 
+        function clear_json() {
+            $("textarea#json").val("[]");
+        }
+
         $(document).ready(function () {
+            clear_json();
+
             $.ajax({
-                url: "TestData.json",
+                url: "WebService/TestData.json",
                 dataType: "text",
                 async: true,
                 success: function (msg) {
@@ -19,22 +25,19 @@
 
             $("input#btn_get").click(
                 function () {
-                    $("textarea#json").val("");
-                    if ($("input#tbx_filter").val() == "") {
-                        $.getJSON(
-                            rootURL,
-                            function (result) {
-                                $("textarea#json").val(JSON.stringify(result));
-                            }
-                        );
-                    } else {
-                        $.getJSON(
-                            rootURL + '?filter=' + $("input#tbx_filter").val(),
-                            function (result) {
-                                $("textarea#json").val(JSON.stringify(result));
-                            }
-                        );
+                    var url = rootURL;
+
+                    clear_json();
+                    if ($("input#tbx_filter").val() != "") {
+                        url += '?filter=' + $("input#tbx_filter").val();
                     }
+
+                    $.getJSON(
+                        url,
+                        function (result) {
+                            $("textarea#json").val(JSON.stringify(result));
+                        }
+                    );
                 }
             );
                 
@@ -50,11 +53,7 @@
                 }
             );
 
-            $("input#btn_clear").click(
-                function () {
-                    $("textarea#json").val("[]");
-                }
-            );
+            $("input#btn_clear").click(clear_json);
         }
      )
 
@@ -62,7 +61,7 @@
 </head>
 
 <body>
-    <textarea id="json" rows="35" cols="150">[]</textarea>
+    <textarea id="json" rows="35" cols="150"></textarea>
     <br />
     <label> Filter items: </label>
     <input id="tbx_filter" />

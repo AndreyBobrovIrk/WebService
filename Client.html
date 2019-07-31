@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script>
+        var rootURL = "http://localhost:54838/api/Data";
+
+        function clear_json() {
+            $("textarea#json").val("[]");
+        }
+
+        $(document).ready(function () {
+            clear_json();
+
+            $.ajax({
+                url: "TestData.json",
+                dataType: "text",
+                async: true,
+                success: function (msg) {
+                    alert(msg);
+                    $("textarea#json").val(msg);
+                }
+            });
+
+            $("input#btn_get").click(
+                function () {
+                    $("textarea#json").val("[");
+                    if ($("input#tbx_filter").val() == "") {
+                        $.getJSON(
+                            rootURL,
+                            function (result) {
+                                $("textarea#json").val(JSON.stringify(result));
+                            }
+                        );
+                    } else {
+                        $.getJSON(
+                            rootURL + '?filter=' + $("input#tbx_filter").val(),
+                            function (result) {
+                                $("textarea#json").val(JSON.stringify(result));
+                            }
+                        );
+                    }
+                }
+            );
+                
+            $("input#btn_post").click(
+                function () {
+                    $.ajax({
+                        type: 'POST',
+                        contentType: "application/json",
+                        url: rootURL,
+                        dataType: 'json',
+                        data: JSON.stringify(JSON.parse($("textarea#json").val()))
+                    });
+                }
+            );
+
+            $("input#btn_clear").click(clear_json);
+        }
+     )
+
+    </script>
+</head>
+
+<body>
+    <textarea id="json" rows="35" cols="150"></textarea>
+    <br />
+    <label> Filter items: </label>
+    <input id="tbx_filter" />
+    <input type="button" id="btn_get" value="Get" />
+    <input type="button" id="btn_post" value="Post" />
+    <input type="button" id="btn_clear" value="Clear" />
+</body>
+</html>
