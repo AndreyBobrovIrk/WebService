@@ -96,7 +96,6 @@
     <Content Include="App_Data\Data_log.ldf">
       <DependentUpon>Data.mdf</DependentUpon>
     </Content>
-    <Content Include="Client.html" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>

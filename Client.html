@@ -17,9 +17,7 @@
             $.ajax({
                 url: "TestData.json",
                 dataType: "text",
-                async: true,
                 success: function (msg) {
-                    alert(msg);
                     $("textarea#json").val(msg);
                 }
             });
@@ -67,7 +65,7 @@
 <body>
     <textarea id="json" rows="35" cols="150"></textarea>
     <br />
-    <label> Filter items: </label>
+    <label> Filter: </label>
     <input id="tbx_filter" />
     <input type="button" id="btn_get" value="Get" />
     <input type="button" id="btn_post" value="Post" />
